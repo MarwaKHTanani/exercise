@@ -15,10 +15,8 @@ The intent is for this resource:
 This is a work in progress. Contributions [are welcome](./CONTRIBUTING.md).
 
 ## Before Starting
-If you intend to attempt the exercises in this repo, first clone the repo:
-```
-$ git clone git@github.com:foundersandcoders/ws-software-design-js.git
-```
+If you intend to attempt the exercises in this repo, first clone the repo.
+
 Then install the dependencies
 ```
 $ npm install
