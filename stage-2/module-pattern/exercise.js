@@ -31,7 +31,7 @@ var UrlParser = (function () {
     path: null,
 
     // a function that takes a URL and returns its query string
-    query: null,
+    querystring: null,
   };
 });
 
