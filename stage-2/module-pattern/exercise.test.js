@@ -1,8 +1,7 @@
 'use strict';
 
 const tape = require('tape');
-const exercise = require('../../.solutions/stage-2/module-pattern/solution.js');
-// const exercise = require('./exercise.js');
+const exercise = require('./exercise.js');
 
 tape('Module Pattern', function (test) {
   test.test('UrlParser', function (t) {

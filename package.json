@@ -9,7 +9,7 @@
     "s1.closures": "tape './stage-1/closures-and-scope/exercise.test.js' | tap-spec",
     "s1.functions": "tape './stage-1/abstraction-with-functions/exercise.test.js' | tap-spec",
     "s2": "tape './stage-2/**/*.test.js' | tap-spec",
-    "s2.module": "tape './stage-2/module-pattern/exercise.test.js' | tap-spec",
+    "s2.modules": "tape './stage-2/module-pattern/exercise.test.js' | tap-spec",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
