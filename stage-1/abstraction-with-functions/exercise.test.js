@@ -1,42 +1,37 @@
 'use strict';
 
-const tape = require('tape');
 const exercise = require('./exercise.js');
 
-tape('Abstraction with Functions', function (test) {
-  test.test('capitaliseObjectKeys', (t) => {
+describe('Abstraction with Functions', function () {
+  test('capitaliseObjectKeys', () => {
     const input = { foo: 'foo', bar: 'bar' };
 
     const result = exercise.capitaliseObjectKeys(input);
 
-    t.deepEqual(result, { Foo: 'foo', Bar: 'bar' });
-    t.end();
+    expect(result).toEqual({ Foo: 'foo', Bar: 'bar' });
   });
 
-  test.test('capitaliseObjectValues', (t) => {
+  test('capitaliseObjectValues', () => {
     const input = { foo: 'foo', bar: 'bar' };
 
     const result = exercise.capitaliseObjectValues(input);
 
-    t.deepEqual(result, { foo: 'Foo', bar: 'Bar' });
-    t.end();
+    expect(result).toEqual({ foo: 'Foo', bar: 'Bar' });
   });
 
-  test.test('incrementObjectValues', (t) => {
+  test('incrementObjectValues', () => {
     const input = { foo: 1, bar: 4, baz: -1 };
 
     const result = exercise.incrementObjectValues(input);
 
-    t.deepEqual(result, { foo: 2, bar: 5, baz: 0 });
-    t.end();
+    expect(result).toEqual({ foo: 2, bar: 5, baz: 0 });
   });
 
-  test.test('reverseObjectKeys', (t) => {
+  test('reverseObjectKeys', () => {
     const input = { foo: 1, bar: 4, baz: -1 };
 
     const result = exercise.reverseObjectKeys(input);
 
-    t.deepEqual(result, { oof: 1, rab: 4, zab: -1 });
-    t.end();
+    expect(result).toEqual({ oof: 1, rab: 4, zab: -1 });
   });
 });

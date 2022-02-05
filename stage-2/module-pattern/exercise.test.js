@@ -1,39 +1,36 @@
 'use strict';
 
-const tape = require('tape');
 const exercise = require('./exercise.js');
 
-tape('Module Pattern', function (test) {
-  test.test('UrlParser', function (t) {
+describe('Module Pattern', function () {
+  test('UrlParser', function () {
     const { UrlParser } = exercise;
     const url = 'https://example.com/hello?foo=1&bar=2';
 
-    t.equal(typeof UrlParser, 'object', 'Expect module to be object');
-    t.equal(typeof UrlParser.protocol, 'function', 'Expect protocol method');
-    t.equal(typeof UrlParser.domain, 'function', 'Expect domain method');
-    t.equal(typeof UrlParser.path, 'function', 'Expect path method');
-    t.equal(typeof UrlParser.querystring, 'function', 'Expect querystring method');
+    expect(typeof UrlParser).toBe('object', 'Expect module to be object');
+    expect(typeof UrlParser.protocol).toBe('function', 'Expect protocol method');
+    expect(typeof UrlParser.domain).toBe('function', 'Expect domain method');
+    expect(typeof UrlParser.path).toBe('function', 'Expect path method');
+    expect(typeof UrlParser.querystring).toBe('function', 'Expect querystring method');
 
-    t.equal(UrlParser.protocol(url), 'https');
-    t.equal(UrlParser.domain(url), 'example.com');
-    t.equal(UrlParser.path(url), 'hello');
-    t.equal(UrlParser.querystring(url), 'foo=1&bar=2');
-    t.end();
+    expect(UrlParser.protocol(url)).toBe('https');
+    expect(UrlParser.domain(url)).toBe('example.com');
+    expect(UrlParser.path(url)).toBe('hello');
+    expect(UrlParser.querystring(url)).toBe('foo=1&bar=2');
   });
 
-  test.test('createUrlBuilder', function (t) {
+  test('createUrlBuilder', function () {
     const { createUrlBuilder } = exercise;
     const host = 'https://example.com';
     const urlBuilder = createUrlBuilder(host);
 
-    t.equal(typeof urlBuilder, 'function', 'Expect URL builder to be a function');
-    t.equal(
-      urlBuilder({ path: 'hello', query: { foo: 1, bar: 2 } }),
+    expect(typeof urlBuilder).toBe('function', 'Expect URL builder to be a function');
+    expect(
+      urlBuilder({ path: 'hello', query: { foo: 1, bar: 2 } })).toBe(
       `${host}/hello?foo=1&bar=2`,
       'Expect call to URL builder to build full URL'
     );
-    t.equal(urlBuilder.path('hello'), `${host}/hello`);
-    t.equal(urlBuilder.query({ foo: 1, bar: 2 }), `${host}?foo=1&bar=2`);
-    t.end();
+    expect(urlBuilder.path('hello')).toBe(`${host}/hello`);
+    expect(urlBuilder.query({ foo: 1, bar: 2 })).toBe(`${host}?foo=1&bar=2`);
   });
 });
