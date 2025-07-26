@@ -12,80 +12,116 @@
  * you are refactoring.
  */
 'use strict';
+const formUnanswerd=document.querySelector('#form-unanswered');
+const resultSummary=document.querySelector('#results-summary')
+const resultBody=document.querySelector('#results-body');
 
-document.querySelector('#form-unanswered').addEventListener('submit', function (e) {
-  e.preventDefault();
 
-  var form = e.target;
-  var tags = form.querySelector('input[name=tags]').value;
-  var url  = 'https://api.stackexchange.com/2.2/questions/unanswered?order=desc&sort=activity&site=stackoverflow&tagged=' + tags;
 
-  var xhr = new XMLHttpRequest();
-
-  xhr.addEventListener('load', function () {
+const req =(url, callback)=>{
+  let xhr= new XMLHttpRequest();
+  xhr.addEventListener('load',()=>{
     if (xhr.status === 200) {
-      var response = JSON.parse(xhr.responseText);
-
-      document.querySelector('#results-summary').innerHTML = ''
-        + '<p>'
-        + 'Query of ' + tags +  ' returned ' + response.items.length + ' results'
-        + '</p>';
-
-      document.querySelector('#results-body').innerHTML = response.items.map(function (item) {
-        return ''
-          + '<div>'
-          + '<p>Title: ' + item.title + '</p>'
-          + '<p>Date: ' + new Date(item.creation_date) + '</p>'
-          + '<p>Link: <a href="' + item.link + '">Click here</a></p>'
-          + '<p>Owner: ' + item.owner.display_name + '</p>'
-          + '</div>'
-      })
-      .join('<br>');
-
-    } else {
+      let response = JSON.parse(xhr.responseText);
+      callback(response)
+      } else {
       console.log('Status Code: ' + xhr.status);
     }
-  });
-
+})
   xhr.open('GET', url);
   xhr.send();
-});
+}
 
+function createElement(tag ) {
+  const el = document.createElement(tag);
+  return el;
+}
 
-document.querySelector('#form-answerers').addEventListener('submit', function (e) {
-  e.preventDefault();
+formUnanswerd.addEventListener('submit',(e)=>{
+  e.preventDefault()
+  let form =e.target;
+  let tags=form.querySelector('input[name=tags]').value;
+  let url  = 'https://api.stackexchange.com/2.2/questions/unanswered?order=desc&sort=activity&site=stackoverflow&tagged=' + tags;
 
-  var form = e.target;
-  var tag  = form.querySelector('input[name=tags]').value;
-  var url  = 'http://api.stackexchange.com/2.2/tags/' + tag + '/top-answerers/all_time?site=stackoverflow'
+ req(url,(response)=>{
 
-  var xhr = new XMLHttpRequest();
+      resultSummary.innerHTML=''
 
-  xhr.addEventListener('load', function () {
-    if (xhr.status === 200) {
-      var response = JSON.parse(xhr.responseText);
+      const p = createElement('p')
+      p.textContent=`Query of ${tags} returned ${response.items.length} results`;
+      resultSummary.appendChild(p)
 
-      document.querySelector('#results-summary').innerHTML = ''
-        + '<p>'
-        + 'Query of ' + tags +  ' returned ' + response.items.length + ' results'
-        + '</p>';
+      resultBody.innerHTML='';
+      response.items.map(function (item) {
+        const container=createElement('div')
 
-      document.querySelector('#results-body').innerHTML = response.items.map(function (item) {
-        return ''
-          + '<div>'
-          + '<p>User: ' + item.user.display_name + '</p>'
-          + '<p>Reputation: ' + item.user.reputation + '</p>'
-          + '<p>Profile: <a href="' + item.user.link + '">Click here</a></p>'
-          + '<p>Score: ' + item.score + '</p>'
-          + '</div>'
+        const title=createElement('p')
+        title.textContent=`Title: ${item.title}`
+        container.appendChild(title)
+
+        const date=createElement('p')
+        date.textContent=`Date: ${new Date(item.creation_date)}`
+        container.appendChild(date)
+
+        const link=createElement('p')
+        link.textContent='Link: '
+        const a=createElement('a')
+        a.href=item.link
+        a.textContent='Click here'
+        link.appendChild(a)
+        container.appendChild(link)
+
+        const owner=createElement('p')
+        owner.textContent=`Owner: ${ item.owner.display_name}`
+        container.appendChild(owner)
+
+        resultBody.appendChild(container)
+
       })
-      .join('<br>');
+    })
+  })
 
-    } else {
-      console.log('Status Code: ' + xhr.status);
-    }
-  });
 
-  xhr.open('GET', url);
-  xhr.send();
-});
+const formAnswerd=document.querySelector('#form-answerers');
+formAnswerd.addEventListener('submit',(e)=>{
+  e.preventDefault()
+  let form =e.target;
+  let tags=form.querySelector('input[name=tags]').value;
+  let url  = 'http://api.stackexchange.com/2.2/tags/' + tags + '/top-answerers/all_time?site=stackoverflow'
+
+ req(url,(response)=>{
+      resultSummary.innerHTML=''
+
+      const p = createElement('p')
+      p.textContent=`Query of ${tags} returned ${response.items.length} results`;
+      resultSummary.appendChild(p)
+
+      resultBody.innerHTML='';
+      response.items.map(function (item) {
+        const container=createElement('div')
+
+        const user=createElement('p')
+        user.textContent=`User: ${item.user.display_name}`
+        container.appendChild(user)
+
+        const reputation=createElement('p')
+        reputation.textContent=`Reputation: ${item.user.reputation}`
+        container.appendChild(reputation)
+
+        const profile=createElement('p')
+        profile.textContent='Profile: '
+        const a=createElement('a')
+        a.href=item.user.link
+        a.textContent='Click here'
+        profile.appendChild(a)
+        container.appendChild(profile)
+
+        const score=createElement('p')
+        score.textContent=`Score: ${item.score}`
+        container.appendChild(score)
+
+        resultBody.appendChild(container)
+
+      })
+})
+})
