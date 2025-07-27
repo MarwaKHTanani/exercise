@@ -5,8 +5,7 @@
  *   npm run s2.modules
  * This will run a series of tests which should all pass.
  */
-'use strict';
-
+"use strict";
 /*
  * Create a single module (using an IIFE) which contains functionality to parse
  * URLs.
@@ -17,24 +16,35 @@
  * |          |     |                |   |      |  |             |
  * | protocol |     |    domain      |   | path |  | querystring |
  */
-var UrlParser = (function () {
-  // fill in ...
-
-  return {
-    // a function that takes a URL and returns its protocol
-    protocol: null,
-
-    // a function that takes a URL and returns its domain
-    domain: null,
-
-    // a function that takes a URL and returns its path
-    path: null,
-
-    // a function that takes a URL and returns its query string
-    querystring: null,
+let UrlParser = (function () {
+  let protocol = function (url) {
+    let parsed = new URL(url);
+    return parsed.protocol.replace(":", "");
   };
-});
-
+  let domain = function (url) {
+    return new URL(url).hostname;
+  };
+  let path = function (url) {
+    let path = new URL(url).pathname;
+    if (path.startsWith("/")) {
+      path = path.slice(1);
+    }
+    if (path.endsWith("/")) {
+      path = path.slice(0, -1);
+    }
+    return path;
+  };
+  let querystring = function (url) {
+    let search = new URL(url).search;
+    return search.startsWith("?") ? search.slice(1) : search;
+  };
+  return {
+    protocol: protocol,
+    domain: domain,
+    path: path,
+    querystring: querystring,
+  };
+})();
 
 /*
  * Create a module that can support multiple instances (like in our example).
@@ -50,14 +60,44 @@ var UrlParser = (function () {
  *
  * exampleBuilder.
  */
-var createUrlBuilder = function (host) {
-  // fill in ...
+let createUrlBuilder = function (host) {
+  let builder = function (option = {}) {
+    const url = new URL(host);
 
-  var builder = function () {}
+    if (option.path) {
+      let path = option.path;
+      if (path.startsWith("/")) path = path.slice(1);
+      url.pathname = path;
+    }
+
+    if (option.query) {
+      Object.entries(option.query).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
+      });
+    }
+
+    return url.toString();
+  };
+
+  builder.path = function (path) {
+    const url = new URL(host);
+    if (path.startsWith("/")) path = path.slice(1);
+    url.pathname = path;
+    return url.toString();
+  };
+
+  builder.query = function (query) {
+    const url = new URL(host);
+    url.pathname = "";
+
+    Object.entries(query).forEach(([key, value]) => {
+      url.searchParams.append(key, value);
+    });
+    return url.toString();
+  };
 
   return builder;
 };
-
 
 module.exports = {
   UrlParser,
